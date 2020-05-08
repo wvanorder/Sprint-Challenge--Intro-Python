@@ -75,7 +75,7 @@ cityreader(cities)
 # TODO Get latitude and longitude values from the user
 latLons = input("\n input lat1 and lon1 separated by a comma: \n").split(',')
 latLons.extend(input("\n input lat2 and lon2 separated by a comma and see what cities fall in that area: \n").split(','))
-latLons = [float(i )for i in latLons]
+latLons = [float(i)for i in latLons]
 
 
 properOrder = []
@@ -90,11 +90,9 @@ else: #latLons[0] > latLons[2] and latLons[1] < latLons[3]
     properOrder = latLons
 
 
-print(properOrder)
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
   within = [city for city in cities if city.lat <= lat1 and city.lat >= lat2 and city.lon >= lon1 and city.lon <= lon2]
-  print(within)
   # TODO Ensure that the lat and lon values are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
