@@ -1,6 +1,10 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
-
+class City:
+    def __init__(self, name, lat, lon):
+        self.name = name
+        self.lat = lat
+        self.lon = lon
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -14,20 +18,30 @@
 #
 # Note that the first line of the CSV is header that describes the fields--this
 # should not be loaded into a City object.
+import csv
 cities = []
 
 def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
+
+    #imports the file as and makes a-python readable object
+    with open('cities.csv') as csvfile:
+        readCSV = csv.reader(csvfile)
+
+        #skips the first row of the file
+        next(readCSV)
+
+        for row in readCSV:
+            cities.append(City(row[0], float(row[3]), float(row[4])))
     return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
-for c in cities:
-    print(c)
+#for c in cities:
+#    print(f"{c.name}, {c.lat}, {c.lon}")
 
 # STRETCH GOAL!
 #
@@ -59,13 +73,33 @@ for c in cities:
 # Salt Lake City: (40.7774,-111.9301)
 
 # TODO Get latitude and longitude values from the user
+latLons = input("\n input lat1 and lon1 separated by a comma: \n").split(',')
+latLons.extend(input("\n input lat2 and lon2 separated by a comma and see what cities fall in that area: \n").split(','))
+latLons = [float(i)for i in latLons]
+
+
+properOrder = []
+#logic to order latitudes and longitudes properly. Not clean, but first pass will do
+if latLons[0] < latLons[2] and latLons[1] > latLons[3]:
+    properOrder.extend([latLons[2], latLons[3], latLons[0], latLons[1]])
+elif latLons[0] > latLons[2] and latLons[1] > latLons[3]:
+    properOrder.extend([latLons[0], latLons[3], latLons[2], latLons[1]])
+elif latLons[0] < latLons[2] and latLons[1] < latLons[3]:
+    properOrder.extend([latLons[2], latLons[1], latLons[0], latLons[3]])
+else: #latLons[0] > latLons[2] and latLons[1] < latLons[3]
+    properOrder = latLons
+
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
-  within = []
-
-  # TODO Ensure that the lat and lon valuse are all floats
+  within = [city for city in cities if city.lat <= lat1 and city.lat >= lat2 and city.lon >= lon1 and city.lon <= lon2]
+  # TODO Ensure that the lat and lon values are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
 
   return within
+
+
+citiesWithin = cityreader_stretch(properOrder[0], properOrder[1], properOrder[2], properOrder[3], cities)
+
+print(len(citiesWithin))
